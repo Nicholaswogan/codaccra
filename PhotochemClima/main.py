@@ -136,7 +136,6 @@ def main_I_1(test):
         surface_albedo=0.32, 
         number_of_layers=200, 
         number_of_zenith_angles=4, 
-        photon_scale_factor=0.98771561409974729,
         opacities=opacities
     )
 
@@ -154,6 +153,7 @@ def main_I_1(test):
     f_i[:,c.species_names.index('CO2')] = CO2
     f_i[:,c.species_names.index('H2O')] = H2O
 
+    c.rad.set_bolometric_flux(1360.0)
     c.rad.surface_albedo = np.ones(len(c.rad.surface_albedo))*0.32
     c.rad.surface_emissivity = np.ones(len(c.rad.surface_emissivity))*0.9
 
@@ -163,7 +163,7 @@ def main_I_1(test):
         c, 
         filename=f'results/codaccra_photochemclima_I-1{test}.txt',
         planet_diameter=12742, 
-        planet_gravity= 9.81, 
+        planet_gravity=9.81, 
         star_distance=1, 
         star_type='Sun', 
         star_temperature=5772, 
@@ -186,7 +186,6 @@ def main_II_1():
         surface_albedo=0.32, 
         number_of_layers=100, 
         number_of_zenith_angles=4, 
-        photon_scale_factor=0.98771561409974729
     )
 
     c = AdiabatClimate(
@@ -195,11 +194,11 @@ def main_II_1():
         'inputs/stellar_flux_Earth.txt',
     )
 
+    c.rad.set_bolometric_flux(1360.0)
     c.rad.surface_albedo = np.ones(len(c.rad.surface_albedo))*0.32
     c.rad.surface_emissivity = np.ones(len(c.rad.surface_emissivity))*0.9
     c.P_top = 10
     c.RH = np.ones(len(c.species_names))*1.0
-    c.max_rc_iters = 30
 
     # Input atmospheric composition
     P_i = np.ones(len(c.species_names))*1e-10
@@ -254,7 +253,6 @@ def run_trappist1g(P_CO2, T_trop_guess, T_surf_guess):
         surface_albedo=0.2, 
         number_of_layers=50, 
         number_of_zenith_angles=4, 
-        photon_scale_factor=1.0
     )
 
     c = AdiabatClimate(
@@ -262,6 +260,8 @@ def run_trappist1g(P_CO2, T_trop_guess, T_surf_guess):
         'inputs/settings_III7.yaml',
         'inputs/stellar_flux_TRAPPIST1g.txt'
     )
+
+    print(f'TRAPPIST-1 g bolometric flux = {c.rad.bolometric_flux()} W/m^2')
 
     # Input atmospheric composition
     P_i = np.ones(len(c.species_names))*1e-10
@@ -273,7 +273,6 @@ def run_trappist1g(P_CO2, T_trop_guess, T_surf_guess):
     # Various settings
     c.RH = np.ones(len(c.species_names))*1
     c.P_top = 10
-    c.max_rc_iters = 30
     c.max_rc_iters_convection = -1
     c.convective_max_boundary_shift = 1
 
